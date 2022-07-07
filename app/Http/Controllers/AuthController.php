@@ -53,7 +53,7 @@ class AuthController extends Controller
                 return $this->respondWithToken($token, 'Se ha logeado correctamente.', false, 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 401);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
         }
     }
 

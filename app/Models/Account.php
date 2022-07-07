@@ -28,6 +28,7 @@ class Account extends Model implements AuthenticatableContract, AuthorizableCont
 
     use Authenticatable, Authorizable;
 
+
     /**
      * The primary key for the model.
      * 
