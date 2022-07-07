@@ -26,6 +26,18 @@ Route::group([
     Route::post('register', 'AuthController@register');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
+    Route::post('user-profile', 'AuthController@userProfile');
+    Route::post('user-profile-by-email', 'AuthController@userProfileByEmail');
     Route::post('online-users', 'CharactersController@showOnline');
+    Route::post('characters-user', 'CharactersController@getCharactersByUser');
+    Route::post('characters-user-by-email', 'CharactersController@getCharactersByEmail');
+    Route::post('new', 'NewsController@showNewId');
+    Route::post('news-user', 'NewsController@showNewsUser');
+    Route::post('create-new', 'NewsController@createNew');
+    Route::post('update-new', 'NewsController@updateNew');
+    Route::post('delete-new', 'NewsController@deleteNew');
+    Route::post('contact', 'ContactController@showContact');
+    Route::post('create-contact', 'ContactController@createContact');
+    Route::post('update-contact', 'ContactController@updateContact');
 
 });
