@@ -9,7 +9,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
 ```bash
 php >= 8.0
 composer 2
-apache 2 or nginx
+apache 2 or NGINX
 ```
 
 ## Contributing
