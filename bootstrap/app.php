@@ -61,6 +61,7 @@ $app->singleton(
 
 $app->configure('app');
 $app->configure('eloquent_model_generator');
+$app->configure('database');
 
 /*
 |--------------------------------------------------------------------------
