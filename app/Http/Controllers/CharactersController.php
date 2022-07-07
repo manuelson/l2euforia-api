@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
 use App\Models\Characters;
+use Illuminate\Http\Request;
 
 class CharactersController extends Controller
 {
@@ -25,7 +27,48 @@ class CharactersController extends Controller
                 return response()->json(['message' => $count . ' usuario conectado.', 'error' => false], 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => false], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+        }
+    }
+
+    public function getCharactersByUser(Request $request)
+    {
+        try {
+            $characters = Characters::where('account_name', $request->username)->get();
+
+            return response()->json(['message' => $characters, 'error' => false], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+        }
+    }
+
+    public function getCharactersByEmail(Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'email' => 'required|email',
+            ],
+            [
+                'email.required' => 'Se requiere un email.',
+                'email' => 'Debes de poner un email válido.'
+            ]
+        );
+
+        try {
+            $user = Account::where('email', $request->email)->first();
+            if ($user) {
+                $characters = Characters::where('account_name', $user->login)->get();
+                if ($characters->count() > 0) {
+                    return response()->json(['message' => $characters, 'error' => false], 200);
+                } else {
+                    return response()->json(['message' => "No existen personajes para este usuario.", 'error' => true], 409);
+                }
+            } else {
+                return response()->json(['message' => "No existe usuario con ese email.", 'error' => true], 409);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
         }
     }
 }

@@ -23,24 +23,26 @@ class AuthController extends Controller
     public function login(Request $request)
     {
 
-        $this->validate($request, [
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ],
-        [
-            'email' => 'Debes poner un email valido.',
-            'email.required' => 'Se requiere un email.',
-            'password.required' => 'Se requiere de una contraseña.'
-        ]
+        $this->validate(
+            $request,
+            [
+                'email' => 'required|email',
+                'password' => 'required|string',
+            ],
+            [
+                'email' => 'Debes poner un email valido.',
+                'email.required' => 'Se requiere un email.',
+                'password.required' => 'Se requiere de una contraseña.'
+            ]
         );
 
 
         try {
-            $login = Account::where('login', $request->login)->first();
+            $login = Account::where('email', $request->email)->first();
             if (!$login) {
                 return response()->json(['message' => 'No existe el usuario.', 'error' => true], 401);
             } else {
-                $user = Account::where('login', $request->login)
+                $user = Account::where('email', $request->email)
                     ->where('password', base64_encode(pack("H*", sha1(utf8_encode($request->password)))))
                     ->first();
 
@@ -57,7 +59,7 @@ class AuthController extends Controller
         }
     }
 
-        /**
+    /**
      * Store a new user.
      *
      * @param  Request  $request
@@ -66,36 +68,37 @@ class AuthController extends Controller
     public function register(Request $request)
     {
 
-        $this->validate($request, [
-            'login' => 'required|string|unique:accounts',
-            'email' => 'required|email|unique:accounts',
-            'password' => 'required|confirmed|min:6',
-        ],
-        [
-            'login.unique' => 'Ya existe ese id de usuario.',
-            'email.unique' => 'Ya existe una cuenta con ese email.',
-            'email' => 'Debes poner un email valido.',
-            'email.required' => 'Se requiere un email.',
-            'login.required' => 'Se requiere un id de usuario.',
-            'password.min' => 'Debe tener minimo 6 caracteres la contraseña.',
-            'password.confirmed' => 'No concuerda la confirmación de contraseña.',
-            'password.required' => 'Se requiere de una contraseña.'
-        ]);
+        $this->validate(
+            $request,
+            [
+                'login' => 'required|string|unique:accounts',
+                'email' => 'required|email|unique:accounts',
+                'password' => 'required|confirmed|min:6',
+            ],
+            [
+                'login.unique' => 'Ya existe ese id de usuario.',
+                'email.unique' => 'Ya existe una cuenta con ese email.',
+                'email' => 'Debes poner un email valido.',
+                'email.required' => 'Se requiere un email.',
+                'login.required' => 'Se requiere un id de usuario.',
+                'password.min' => 'Debe tener minimo 6 caracteres la contraseña.',
+                'password.confirmed' => 'No concuerda la confirmación de contraseña.',
+                'password.required' => 'Se requiere de una contraseña.'
+            ]
+        );
         try {
             $account = new Account();
             $account->login = $request->input('login');
             $account->email = $request->input('email');
             $password = $request->input('password');
-            $account->password = base64_encode(pack( "H*", sha1( utf8_encode($password))));
-            
+            $account->password = base64_encode(pack("H*", sha1(utf8_encode($password))));
+
             $account->save();
 
             return response()->json(['message' => 'Se ha creado la cuenta correctamente', 'error' => false, 'account' => ['user_id' => $account->login, 'email' => $account->email]], 200);
-
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 409);
         }
-
     }
 
 
@@ -119,6 +122,57 @@ class AuthController extends Controller
     public function refresh()
     {
         return $this->respondWithToken(auth()->refresh(), 'Has refrescado la sesion', false, 200);
+    }
+
+    public function userProfile(Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'login' => 'required|string',
+            ],
+            [
+                'login.required' => 'Se requiere un id de usuario.'
+            ]
+        );
+
+
+        try {
+            $user = Account::where('login', $request->login)->first();
+            if (!$user) {
+                return response()->json(['message' => 'No existe el usuario.', 'error' => true], 401);
+            } else {
+                return response()->json(['message' => $user, 'error' => false], 200);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+        }
+    }
+
+    public function userProfileByEmail(Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'email' => 'required|email',
+            ],
+            [
+                'email.required' => 'Se requiere un email.',
+                'email' => 'Debes de poner un email válido.'
+            ]
+        );
+
+
+        try {
+            $user = Account::where('email', $request->email)->first();
+            if (!$user) {
+                return response()->json(['message' => 'No existe el usuario.', 'error' => true], 401);
+            } else {
+                return response()->json(['message' => $user, 'error' => false], 200);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+        }
     }
 
     /**
