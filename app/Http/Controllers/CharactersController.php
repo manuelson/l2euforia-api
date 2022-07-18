@@ -27,7 +27,7 @@ class CharactersController extends Controller
                 return response()->json(['message' => $count . ' usuario conectado.', 'error' => false], 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }
     }
 
@@ -38,7 +38,7 @@ class CharactersController extends Controller
 
             return response()->json(['message' => $characters, 'error' => false], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }
     }
 
@@ -62,13 +62,13 @@ class CharactersController extends Controller
                 if ($characters->count() > 0) {
                     return response()->json(['message' => $characters, 'error' => false], 200);
                 } else {
-                    return response()->json(['message' => "No existen personajes para este usuario.", 'error' => true], 409);
+                    return response()->json(['message' => "No existen personajes para este usuario.", 'error' => true], 200);
                 }
             } else {
-                return response()->json(['message' => "No existe usuario con ese email.", 'error' => true], 409);
+                return response()->json(['message' => "No existe usuario con ese email.", 'error' => true], 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }
     }
 }

@@ -40,14 +40,14 @@ class AuthController extends Controller
         try {
             $login = Account::where('email', $request->email)->first();
             if (!$login) {
-                return response()->json(['message' => 'No existe el usuario.', 'error' => true], 401);
+                return response()->json(['message' => 'No existe el usuario.', 'error' => true], 200);
             } else {
                 $user = Account::where('email', $request->email)
                     ->where('password', base64_encode(pack("H*", sha1(utf8_encode($request->password)))))
                     ->first();
 
                 if (!$user) {
-                    return response()->json(['message' => 'No coincide el usuario y contraseña.', 'error' => true], 401);
+                    return response()->json(['message' => 'No coincide el usuario y contraseña.', 'error' => true], 200);
                 }
 
                 $token = Auth::login($user);
@@ -55,7 +55,7 @@ class AuthController extends Controller
                 return $this->respondWithToken($token, 'Se ha logeado correctamente.', false, 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }
     }
 
@@ -97,7 +97,7 @@ class AuthController extends Controller
 
             return response()->json(['message' => 'Se ha creado la cuenta correctamente', 'error' => false, 'account' => ['user_id' => $account->login, 'email' => $account->email]], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 409);
+            return response()->json(['message' => $e->getMessage()], 500);
         }
     }
 
@@ -140,12 +140,12 @@ class AuthController extends Controller
         try {
             $user = Account::where('login', $request->login)->first();
             if (!$user) {
-                return response()->json(['message' => 'No existe el usuario.', 'error' => true], 401);
+                return response()->json(['message' => 'No existe el usuario.', 'error' => true], 200);
             } else {
                 return response()->json(['message' => $user, 'error' => false], 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }
     }
 
@@ -166,12 +166,12 @@ class AuthController extends Controller
         try {
             $user = Account::where('email', $request->email)->first();
             if (!$user) {
-                return response()->json(['message' => 'No existe el usuario.', 'error' => true], 401);
+                return response()->json(['message' => 'No existe el usuario.', 'error' => true], 200);
             } else {
                 return response()->json(['message' => $user, 'error' => false], 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }
     }
 

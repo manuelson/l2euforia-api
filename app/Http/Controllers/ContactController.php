@@ -21,7 +21,7 @@ class ContactController extends Controller
 
             return response()->json(['message' => $contact, 'error' => false], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }
     }
 
@@ -54,7 +54,7 @@ class ContactController extends Controller
 
             return response()->json(['message' => $contact, 'error' => false], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }
     }
 
@@ -91,10 +91,10 @@ class ContactController extends Controller
                     return response()->json(['message' => "No se ha actualizado nada.", 'error' => false], 200);
                 }
             } else {
-                return response()->json(['message' => "No existe contacto con ese id.", 'error' => true], 409);
+                return response()->json(['message' => "No existe contacto con ese id.", 'error' => true], 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }
     }
 }

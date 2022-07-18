@@ -22,7 +22,7 @@ class NewsController extends Controller
 
             return response()->json(['message' => $news, 'error' => false], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }
     }
 
@@ -33,7 +33,7 @@ class NewsController extends Controller
 
             return response()->json(['message' => $news, 'error' => false], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }
     }
 
@@ -64,10 +64,10 @@ class NewsController extends Controller
 
                 return response()->json(['message' => $news, 'error' => false], 200);
             } else {
-                return response()->json(['message' => "No tienes permiso para crear una noticia.", 'error' => true], 409);
+                return response()->json(['message' => "No tienes permiso para crear una noticia.", 'error' => true], 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }
     }
 
@@ -109,13 +109,13 @@ class NewsController extends Controller
                         return response()->json(['message' => "No se ha actualizado nada.", 'error' => false], 200);
                     }
                 } else {
-                    return response()->json(['message' => "No existe noticia con ese id.", 'error' => true], 409);
+                    return response()->json(['message' => "No existe noticia con ese id.", 'error' => true], 200);
                 }
             } else {
-                return response()->json(['message' => "No tienes permiso para crear una noticia.", 'error' => true], 409);
+                return response()->json(['message' => "No tienes permiso para crear una noticia.", 'error' => true], 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }
     }
 
@@ -130,13 +130,13 @@ class NewsController extends Controller
 
                     return response()->json(['message' => "Se ha borrado la noticia correctamente.", 'error' => false], 200);
                 } else {
-                    return response()->json(['message' => "No existe noticia con ese id.", 'error' => true], 409);
+                    return response()->json(['message' => "No existe noticia con ese id.", 'error' => true], 200);
                 }
             } else {
-                return response()->json(['message' => "No tienes permiso para crear una noticia.", 'error' => true], 409);
+                return response()->json(['message' => "No tienes permiso para crear una noticia.", 'error' => true], 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'error' => true], 409);
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }
     }
 }
