@@ -28,6 +28,7 @@ Route::group([
     Route::post('refresh', 'AuthController@refresh');
     Route::post('user-profile', 'AuthController@userProfile');
     Route::post('user-profile-by-email', 'AuthController@userProfileByEmail');
+    Route::post('exist-user', 'AuthController@existUser');
     Route::post('online-users', 'CharactersController@showOnline');
     Route::post('characters-user', 'CharactersController@getCharactersByUser');
     Route::post('characters-user-by-email', 'CharactersController@getCharactersByEmail');

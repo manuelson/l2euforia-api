@@ -12,7 +12,13 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'refresh', 'logout', 'register']]);
+        $this->middleware('auth:api', ['except' => [
+            'login',
+            'refresh',
+            'logout',
+            'register',
+            'existUser'
+        ]]);
     }
     /**
      * Get a JWT via given credentials.
@@ -143,6 +149,32 @@ class AuthController extends Controller
                 return response()->json(['message' => 'No existe el usuario.', 'error' => true], 200);
             } else {
                 return response()->json(['message' => $user, 'error' => false], 200);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
+        }
+    }
+
+    public function existUser(Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'email' => 'required|email',
+            ],
+            [
+                'email.required' => 'Se requiere un email.',
+                'email' => 'Debes de poner un email válido.'
+            ]
+        );
+
+
+        try {
+            $user = Account::where('email', $request->email)->first();
+            if (!$user) {
+                return response()->json(['message' => false, 'error' => true], 200);
+            } else {
+                return response()->json(['message' => true, 'error' => false], 200);
             }
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
