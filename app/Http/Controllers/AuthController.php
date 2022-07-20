@@ -17,7 +17,9 @@ class AuthController extends Controller
             'refresh',
             'logout',
             'register',
-            'existUser'
+            'existUser',
+            'fgChangePassword',
+            'fgCheckToken'
         ]]);
     }
     /**
@@ -173,9 +175,66 @@ class AuthController extends Controller
             $user = Account::where('email', $request->email)->first();
             if (!$user) {
                 return response()->json(['message' => false, 'error' => true], 200);
-            } else {
-                return response()->json(['message' => true, 'error' => false], 200);
             }
+
+            // Create token forgot password
+            $user->fp_token = uniqid();
+            $user->save();
+
+            return response()->json(['message' => $user, 'error' => false], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
+        }
+    }
+
+    public function fgCheckToken(Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'token' => 'required'
+            ]
+        );
+
+        try {
+            $user = Account::where('fp_token', $request->token)->first();
+            if (!$user) {
+                return response()->json(['message' => 'El link ha expirado.', 'error' => true], 200);
+            }
+
+            return response()->json(['message' => 'token valido', 'error' => false], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
+        }
+    }
+
+    public function fgChangePassword(Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'token' => 'required',
+                'password' => 'required'
+            ],
+            ['token.required' => 'Se requiere un token.']
+        );
+
+
+        try {
+            $user = Account::where('fp_token', $request->token)->first();
+            if (!$user) {
+                return response()->json(['message' => 'El link ha expirado.', 'error' => true], 200);
+            }
+
+            // Create another token for security.
+            $user->fp_token = '';
+            $user->password = base64_encode(pack("H*", sha1(utf8_encode($request->password))));
+            $user->save();
+
+            return response()->json(['message' => 'token valido', 'error' => false], 200);
+
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
         }

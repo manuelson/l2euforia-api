@@ -29,6 +29,8 @@ Route::group([
     Route::post('user-profile', 'AuthController@userProfile');
     Route::post('user-profile-by-email', 'AuthController@userProfileByEmail');
     Route::post('exist-user', 'AuthController@existUser');
+    Route::post('fg-change-password', 'AuthController@fgChangePassword');
+    Route::post('fg-check-token', 'AuthController@fgCheckToken');
     Route::post('online-users', 'CharactersController@showOnline');
     Route::post('characters-user', 'CharactersController@getCharactersByUser');
     Route::post('characters-user-by-email', 'CharactersController@getCharactersByEmail');
