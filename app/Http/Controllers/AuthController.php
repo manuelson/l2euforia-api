@@ -38,9 +38,9 @@ class AuthController extends Controller
                 'password' => 'required|string',
             ],
             [
-                'email' => 'Debes poner un email valido.',
-                'email.required' => 'Se requiere un email.',
-                'password.required' => 'Se requiere de una contraseña.'
+                'email' => 'Email is not valid.',
+                'email.required' => 'Email is required.',
+                'password.required' => 'Password is required.'
             ]
         );
 
@@ -48,19 +48,19 @@ class AuthController extends Controller
         try {
             $login = Account::where('email', $request->email)->first();
             if (!$login) {
-                return response()->json(['message' => 'No existe el usuario.', 'error' => true], 200);
+                return response()->json(['message' => 'The user doest not exist.', 'error' => true], 200);
             } else {
                 $user = Account::where('email', $request->email)
                     ->where('password', base64_encode(pack("H*", sha1(utf8_encode($request->password)))))
                     ->first();
 
                 if (!$user) {
-                    return response()->json(['message' => 'No coincide el usuario y contraseña.', 'error' => true], 200);
+                    return response()->json(['message' => 'The username and password do not match.', 'error' => true], 200);
                 }
 
                 $token = Auth::login($user);
 
-                return $this->respondWithToken($token, 'Se ha logeado correctamente.', false, 200);
+                return $this->respondWithToken($token, 'You have successfully logged in.', false, 200);
             }
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
@@ -94,14 +94,14 @@ class AuthController extends Controller
                 'password' => 'required|confirmed|min:6',
             ],
             [
-                'login.unique' => 'Ya existe ese id de usuario.',
-                'email.unique' => 'Ya existe una cuenta con ese email.',
-                'email' => 'Debes poner un email valido.',
-                'email.required' => 'Se requiere un email.',
-                'login.required' => 'Se requiere un id de usuario.',
-                'password.min' => 'Debe tener minimo 6 caracteres la contraseña.',
-                'password.confirmed' => 'No concuerda la confirmación de contraseña.',
-                'password.required' => 'Se requiere de una contraseña.'
+                'login.unique' => 'That username already exists.',
+                'email.unique' => 'There is already an account with that email.',
+                'email' => 'You must enter a valid email.',
+                'email.required' => 'Email is required.',
+                'login.required' => 'Username is required',
+                'password.min' => 'The password must have at least 6 characters.',
+                'password.confirmed' => 'Password confirmation does not match.',
+                'password.required' => 'Password is required.'
             ]
         );
         try {
@@ -114,7 +114,7 @@ class AuthController extends Controller
             $account->save();
 
             return response()->json([
-                'message' => 'Se ha creado la cuenta correctamente',
+                'message' => 'The account has been created successfully.',
                 'error' => false,
                 'account' => ['user_id' => $account->login, 'email' => $account->email]],
                 200
@@ -134,7 +134,7 @@ class AuthController extends Controller
     {
         auth()->logout();
 
-        return response()->json(['message' => 'Has cerrado sesion correctamente'], 200);
+        return response()->json(['message' => 'You have logged out successfully.'], 200);
     }
 
     /**
@@ -144,7 +144,7 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh(), 'Has refrescado la sesion', false, 200);
+        return $this->respondWithToken(auth()->refresh(), 'You have refreshed the session.', false, 200);
     }
 
     public function userProfile(Request $request)
@@ -155,7 +155,7 @@ class AuthController extends Controller
                 'login' => 'required|string',
             ],
             [
-                'login.required' => 'Se requiere un id de usuario.'
+                'login.required' => 'Username is required.'
             ]
         );
 
@@ -163,7 +163,7 @@ class AuthController extends Controller
         try {
             $user = Account::where('login', $request->login)->first();
             if (!$user) {
-                return response()->json(['message' => 'No existe el usuario.', 'error' => true], 200);
+                return response()->json(['message' => 'The user does not exist.', 'error' => true], 200);
             } else {
                 return response()->json(['message' => $user, 'error' => false], 200);
             }
@@ -180,8 +180,8 @@ class AuthController extends Controller
                 'email' => 'required|email',
             ],
             [
-                'email.required' => 'Se requiere un email.',
-                'email' => 'Debes de poner un email válido.'
+                'email.required' => 'Email is required.',
+                'email' => 'You must put a valid email.'
             ]
         );
 
@@ -189,7 +189,7 @@ class AuthController extends Controller
         try {
             $user = Account::where('email', $request->email)->first();
             if (!$user) {
-                return response()->json(['message' => ['No existe el email en nuestro sistema.'], 'error' => true], 200);
+                return response()->json(['message' => ['There is no email in our system.'], 'error' => true], 200);
             }
 
             // Create token forgot password
@@ -215,10 +215,10 @@ class AuthController extends Controller
         try {
             $user = Account::where('fp_token', $request->token)->first();
             if (!$user) {
-                return response()->json(['message' => 'El link ha expirado.', 'error' => true], 200);
+                return response()->json(['message' => 'The link has expired.', 'error' => true], 200);
             }
 
-            return response()->json(['message' => 'token valido', 'error' => false], 200);
+            return response()->json(['message' => 'Token valid.', 'error' => false], 200);
 
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
@@ -233,14 +233,14 @@ class AuthController extends Controller
                 'token' => 'required',
                 'password' => 'required'
             ],
-            ['token.required' => 'Se requiere un token.']
+            ['token.required' => 'A token is required.']
         );
 
 
         try {
             $user = Account::where('fp_token', $request->token)->first();
             if (!$user) {
-                return response()->json(['message' => 'El link ha expirado.', 'error' => true], 200);
+                return response()->json(['message' => 'The link has expired.', 'error' => true], 200);
             }
 
             // Create another token for security.
@@ -248,7 +248,7 @@ class AuthController extends Controller
             $user->password = base64_encode(pack("H*", sha1(utf8_encode($request->password))));
             $user->save();
 
-            return response()->json(['message' => 'La contraseña se ha cambiado correctamente.', 'error' => false], 200);
+            return response()->json(['message' => 'The password has been changed successfully.', 'error' => false], 200);
 
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
@@ -263,8 +263,8 @@ class AuthController extends Controller
                 'email' => 'required|email',
             ],
             [
-                'email.required' => 'Se requiere un email.',
-                'email' => 'Debes de poner un email válido.'
+                'email.required' => 'Email is required.',
+                'email' => 'You must put a valid email.'
             ]
         );
 
@@ -272,7 +272,7 @@ class AuthController extends Controller
         try {
             $user = Account::where('email', $request->email)->first();
             if (!$user) {
-                return response()->json(['message' => 'No existe el usuario.', 'error' => true], 200);
+                return response()->json(['message' => 'User not exist.', 'error' => true], 200);
             } else {
                 return response()->json(['message' => $user, 'error' => false], 200);
             }
