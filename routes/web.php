@@ -35,6 +35,7 @@ Route::group([
     Route::post('characters-user', 'CharactersController@getCharactersByUser');
     Route::post('characters-user-by-email', 'CharactersController@getCharactersByEmail');
     Route::post('new', 'NewsController@showNewId');
+    Route::post('news', 'NewsController@getList');
     Route::post('news-user', 'NewsController@showNewsUser');
     Route::post('create-new', 'NewsController@createNew');
     Route::post('update-new', 'NewsController@updateNew');

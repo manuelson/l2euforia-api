@@ -12,7 +12,7 @@ class NewsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['showNewsUser']]);
+        $this->middleware('auth:api', ['except' => ['showNewsUser', 'getList']]);
     }
 
     public function showNewsUser(Request $request)
@@ -31,6 +31,25 @@ class NewsController extends Controller
         try {
             $news = News::where('id', $request->input('id'))->get();
 
+            return response()->json(['message' => $news, 'error' => false], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
+        }
+    }
+
+
+    public function getList(Request $request)
+    {
+        try {
+
+            $this->validate(
+                $request,
+                [
+                    'page' => 'required|int'
+                ],
+            );
+
+            $news = News::orderBy('id', 'desc')->paginate($request->page);
             return response()->json(['message' => $news, 'error' => false], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
