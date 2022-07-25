@@ -50,6 +50,7 @@ class NewsController extends Controller
             );
 
             $news = News::orderBy('id', 'desc')->paginate($request->page);
+
             return response()->json(['message' => $news, 'error' => false], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
