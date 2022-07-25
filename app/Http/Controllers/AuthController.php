@@ -68,6 +68,16 @@ class AuthController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param array $errors
+     * @return array[]
+     */
+    protected function buildFailedValidationResponse(Request $request, array $errors)
+    {
+        return ['message' => $errors, 'error' => true];
+    }
+
+    /**
      * Store a new user.
      *
      * @param  Request  $request
@@ -103,7 +113,12 @@ class AuthController extends Controller
 
             $account->save();
 
-            return response()->json(['message' => 'Se ha creado la cuenta correctamente', 'error' => false, 'account' => ['user_id' => $account->login, 'email' => $account->email]], 200);
+            return response()->json([
+                'message' => 'Se ha creado la cuenta correctamente',
+                'error' => false,
+                'account' => ['user_id' => $account->login, 'email' => $account->email]],
+                200
+            );
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -174,7 +189,7 @@ class AuthController extends Controller
         try {
             $user = Account::where('email', $request->email)->first();
             if (!$user) {
-                return response()->json(['message' => false, 'error' => true], 200);
+                return response()->json(['message' => ['No existe el email en nuestro sistema.'], 'error' => true], 200);
             }
 
             // Create token forgot password
@@ -233,7 +248,7 @@ class AuthController extends Controller
             $user->password = base64_encode(pack("H*", sha1(utf8_encode($request->password))));
             $user->save();
 
-            return response()->json(['message' => 'token valido', 'error' => false], 200);
+            return response()->json(['message' => 'La contraseña se ha cambiado correctamente.', 'error' => false], 200);
 
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
