@@ -34,23 +34,22 @@ class AuthController extends Controller
         $this->validate(
             $request,
             [
-                'email' => 'required|email',
+                'username' => 'required',
                 'password' => 'required|string',
             ],
             [
-                'email' => 'Email is not valid.',
-                'email.required' => 'Email is required.',
+                'username.required' => 'Username is required.',
                 'password.required' => 'Password is required.'
             ]
         );
 
 
         try {
-            $login = Account::where('email', $request->email)->first();
+            $login = Account::where('login', $request->username)->first();
             if (!$login) {
                 return response()->json(['message' => 'The user doest not exist.', 'error' => true], 200);
             } else {
-                $user = Account::where('email', $request->email)
+                $user = Account::where('login', $request->username)
                     ->where('password', base64_encode(pack("H*", sha1(utf8_encode($request->password)))))
                     ->first();
 
