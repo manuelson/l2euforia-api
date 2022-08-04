@@ -177,19 +177,18 @@ class AuthController extends Controller
         $this->validate(
             $request,
             [
-                'email' => 'required|email',
+                'username' => 'required',
             ],
             [
-                'email.required' => 'Email is required.',
-                'email' => 'You must put a valid email.'
+                'username.required' => 'username is required.'
             ]
         );
 
 
         try {
-            $user = Account::where('email', $request->email)->first();
+            $user = Account::where('login', $request->username)->first();
             if (!$user) {
-                return response()->json(['message' => ['There is no email in our system.'], 'error' => true], 200);
+                return response()->json(['message' => ['There is no user in our system.'], 'error' => true], 200);
             }
 
             // Create token forgot password
