@@ -90,7 +90,7 @@ class AuthController extends Controller
             $request,
             [
                 'login' => 'required|string|unique:accounts',
-                'email' => 'required|email|unique:accounts',
+                'email' => 'required|email',
                 'password' => 'required|confirmed|min:6',
             ],
             [
