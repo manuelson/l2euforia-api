@@ -42,6 +42,17 @@ class CharactersController extends Controller
         }
     }
 
+    public function getList(Request $request)
+    {
+        try {
+            $characters = Characters::orderBy('level', 'desc')->get();
+
+            return response()->json(['message' => $characters, 'error' => false], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
+        }
+    }
+
     public function getCharactersByEmail(Request $request)
     {
         $this->validate(

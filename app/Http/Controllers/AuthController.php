@@ -59,7 +59,7 @@ class AuthController extends Controller
 
                 $token = Auth::login($user);
 
-                return $this->respondWithToken($token, 'You have successfully logged in.', false, 200);
+                return $this->respondWithToken($token, 'You have successfully logged in.', false, 200, $user->accessLevel);
             }
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
@@ -286,13 +286,14 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithToken($token, $message, $error, $status)
+    protected function respondWithToken($token, $message, $error, $status, $accessLevel)
     {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'message' => $message,
             'error' => $error,
+            'accessLevel' => $accessLevel,
             'expires_in' => auth()->factory()->getTTL()
         ], $status);
     }

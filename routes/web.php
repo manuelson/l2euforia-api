@@ -34,6 +34,7 @@ Route::group([
     Route::post('online-users', 'CharactersController@showOnline');
     Route::post('characters-user', 'CharactersController@getCharactersByUser');
     Route::post('characters-user-by-email', 'CharactersController@getCharactersByEmail');
+    Route::post('characters-list', 'CharactersController@getList');
     Route::post('new', 'NewsController@showNewId');
     Route::post('news', 'NewsController@getList');
     Route::post('news-user', 'NewsController@showNewsUser');
@@ -43,5 +44,6 @@ Route::group([
     Route::post('contact', 'ContactController@showContact');
     Route::post('create-contact', 'ContactController@createContact');
     Route::post('update-contact', 'ContactController@updateContact');
+    Route::post('items', 'ItemsController@getList');
 
 });
