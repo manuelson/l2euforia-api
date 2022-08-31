@@ -29,8 +29,8 @@ class ItemsController extends Controller
             );
 
             $news = Items::Where('loc', $request->type)
-                ->Where('owner_id', $request->owner_id)->get();
-
+                ->Where('owner_id', $request->owner_id)->orderBy('enchant_level', 'desc')->get();
+            
             return response()->json(['message' => $news, 'error' => false], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
