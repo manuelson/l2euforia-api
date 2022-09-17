@@ -35,6 +35,7 @@ Route::group([
     Route::post('characters-user', 'CharactersController@getCharactersByUser');
     Route::post('searchItems', 'CharactersController@searchItems');
     Route::post('changeSex', 'CharactersController@changeSex');
+    Route::post('addNobless', 'CharactersController@addNobless');
     Route::post('getTokens', 'CharactersController@getTokens');
     Route::post('changeNickname', 'CharactersController@changeNickname');
     Route::post('characters-user-by-email', 'CharactersController@getCharactersByEmail');

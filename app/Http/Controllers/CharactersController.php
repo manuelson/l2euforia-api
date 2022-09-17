@@ -138,6 +138,56 @@ class CharactersController extends Controller
         }
     }
 
+
+
+    public function addNobless(Request $request)
+    {
+        $this->validate(
+            $request,
+            [
+                'userId' => 'required',
+                'username' => 'required'
+            ]
+        );
+
+        try {
+            $characters = Characters::where('charId', $request->userId)->where('account_name', $request->username)->first();
+
+            if ($characters->getAttribute('online') === 1) {
+                throw new \Exception('disconnect the user from the server first');
+            }
+
+            if ($charId = $characters->getAttribute('charId')) {
+                // remove tokens to sex changes
+                $item = Items::
+                where('owner_id', $charId)
+                    ->where('item_id', '60009')
+                    ->where('loc', 'INVENTORY')
+                    ->first();
+
+                if ($item->getAttribute('count') < 10) {
+                    throw new \Exception('you dont have enough Euphoria tokens.');
+                }
+                $item->count = (int)$item->getAttribute('count') - (int)10;
+                $item->timestamps=false;
+                $item->save();
+            }
+
+            if ($characters->getAttribute('nobless') == 1) {
+                throw new \Exception('You already nobless.');
+            }
+
+            $characters->nobless = 1;
+            $characters->timestamps=false;
+            $characters->save();
+            return response()->json(['message' => $characters, 'error' => false], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'error' => true], 500);
+        }
+
+    }
+
     public function changeSex(Request $request)
     {
         $this->validate(
