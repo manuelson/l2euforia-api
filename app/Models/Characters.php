@@ -70,7 +70,7 @@ class Characters extends Model
 {
     /**
      * The primary key for the model.
-     * 
+     *
      * @var string
      */
     protected $primaryKey = 'charId';
@@ -79,7 +79,7 @@ class Characters extends Model
 
     /**
      * Indicates if the IDs are auto-incrementing.
-     * 
+     *
      * @var bool
      */
     public $incrementing = false;
@@ -95,5 +95,14 @@ class Characters extends Model
     public function customBufferServiceUlists()
     {
         return $this->hasMany('App\Models\CustomBufferServiceUlist', 'ulist_char_id', 'charId');
+    }
+
+    /**
+     * @param $value
+     * @return void
+     */
+    public function setSex($value) : void
+    {
+        $this->attributes['sex'] =(int)$value;
     }
 }
